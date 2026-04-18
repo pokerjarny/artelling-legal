@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>TikTok Login Callback</title>
+<style>body{font-family:sans-serif;padding:40px;text-align:center;}</style>
+</head>
+<body>
+<h2>🎵 TikTok 로그인 완료</h2>
+<p id="status">Artelling 앱으로 돌아가는 중...</p>
+<script>
+const params = new URLSearchParams(window.location.search);
+const code = params.get('code');
+const state = params.get('state');
+const error = params.get('error');
+
+if (error) {
+  document.getElementById('status').textContent = '❌ 로그인 실패: ' + error;
+} else if (code) {
+  const target = 'http://localhost:8080/tiktok/callback?code=' +
+    encodeURIComponent(code) +
+    (state ? '&state=' + encodeURIComponent(state) : '');
+  document.getElementById('status').innerHTML =
+    '✅ 인증 완료!<br><br>자동 전환 안 되면 <a href="' + target + '">여기 클릭</a>';
+  setTimeout(() => { window.location.href = target; }, 500);
+} else {
+  document.getElementById('status').textContent = '⚠ 인증 코드 없음';
+}
+</script>
+</body>
+</html>
